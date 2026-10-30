@@ -3,15 +3,8 @@ package com.pluralsight;
 public class Product {
     private String productId;
     private String productName;
-    private int price;
+    private double price;
     private String department;
-
-    public Product(String productId, String productName, int price, String department) {
-        this.productId = productId;
-        this.productName = productName;
-        this.price = price;
-        this.department = department;
-    }
 
     public String getProductId() {
         return productId;
@@ -29,11 +22,11 @@ public class Product {
         this.productName = productName;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -44,5 +37,15 @@ public class Product {
     public void setDepartment(String department) {
         this.department = department;
     }
+
+    public Product(String productId, String productName, double price, String department) {
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+        this.department = department;
+
+
+    }
+
 
 }

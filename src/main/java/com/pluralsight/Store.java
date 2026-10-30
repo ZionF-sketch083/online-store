@@ -63,28 +63,44 @@ public class Store {
      * AV1051|JBL Bluetooth Speaker|89.95|Audio Video
      */
     public static void loadInventory(String fileName, ArrayList<Product> inventory) {
+
+
+
         try {
-            BufferedReader bR = new BufferedReader(new FileReader("products.csv"));
+            BufferedReader bR = new BufferedReader(new FileReader(fileName));
+
+            System.out.println(inventory.size());
+
+            // This skip the first line
+            bR.readLine();
 
             String line;
 
+                //This will now start the list with the second line
             while ((line = bR.readLine())!= null){
                 String[] parts = line.split("\\|");
                 String productId = parts[0];
                 String name = parts[1];
-                int price = Integer.parseInt(parts[2]);
+                double price = Double.parseDouble(parts[2]);
                 String department = parts[3];
 
                 Product product = new Product(productId, name, price, department);
+                inventory.add(product);
 
-                System.out.printf("%s, %s: %d, %s people%n",
+
+
+                //Displaying string -> %s
+                //Displaying int -> %d
+                //Displaying double -> %f(display 6 by default)
+                //If you want limit the amount of decimal places -> %.2f
+                System.out.printf("%s, %s: $%.2f by the %s department",
                         product.getProductId(), product.getProductName(),
                         product.getPrice(), product.getDepartment());
             }
             bR.close();
 
         } catch (Exception e) {
-
+            System.err.println("Something wrong with " + fileName);
         }
 
 
