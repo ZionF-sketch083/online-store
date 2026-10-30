@@ -1,5 +1,7 @@
 package com.pluralsight;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -61,6 +63,31 @@ public class Store {
      * AV1051|JBL Bluetooth Speaker|89.95|Audio Video
      */
     public static void loadInventory(String fileName, ArrayList<Product> inventory) {
+        try {
+            BufferedReader bR = new BufferedReader(new FileReader("products.csv"));
+
+            String line;
+
+            while ((line = bR.readLine())!= null){
+                String[] parts = line.split("\\|");
+                String productId = parts[0];
+                String name = parts[1];
+                int price = Integer.parseInt(parts[2]);
+                String department = parts[3];
+
+                Product product = new Product(productId, name, price, department);
+
+                System.out.printf("%s, %s: %d, %s people%n",
+                        product.getProductId(), product.getProductName(),
+                        product.getPrice(), product.getDepartment());
+            }
+            bR.close();
+
+        } catch (Exception e) {
+
+        }
+
+
         // TODO: skip the header line, then read each line, split on "|",
         //       create a Product object, and add it to the inventory list
     }
@@ -72,6 +99,7 @@ public class Store {
     public static void displayProducts(ArrayList<Product> inventory,
                                        ArrayList<Product> cart,
                                        Scanner scanner) {
+
         // TODO: show each product (id, name, price),
         //       prompt for an id, find that product, add to cart
     }
