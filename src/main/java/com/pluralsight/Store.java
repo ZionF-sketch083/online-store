@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -64,10 +65,16 @@ public class Store {
      */
     public static void loadInventory(String fileName, ArrayList<Product> inventory) {
 
-
+        File newFile = new File("products.csv");
 
         try {
-            BufferedReader bR = new BufferedReader(new FileReader(fileName));
+
+            if (!newFile.exists()){
+                newFile.createNewFile();
+                return;
+            }
+
+            BufferedReader bR = new BufferedReader(new FileReader(newFile));
 
             System.out.println(inventory.size());
 
@@ -115,6 +122,32 @@ public class Store {
     public static void displayProducts(ArrayList<Product> inventory,
                                        ArrayList<Product> cart,
                                        Scanner scanner) {
+        for (Product product : inventory) {
+            System.out.printf("%s | %s | $%.2f%n",
+                    product.getProductId(),
+                    product.getProductName(),
+                    product.getPrice());
+        }
+
+        System.out.println("\nEnter a product ID to add to cart.");
+        System.out.println("Enter X to return.");
+
+        String input = scanner.nextLine();
+
+        if (input.equalsIgnoreCase("X")) {
+            return;
+        }
+
+        Product selectedProduct = findProductById(input, inventory);
+
+        if (selectedProduct != null) {
+            cart.add(selectedProduct);
+
+            System.out.println(selectedProduct.getProductName() + "added to cart.");
+
+        } else {
+            System.out.println("Product not found.");
+        }
 
         // TODO: show each product (id, name, price),
         //       prompt for an id, find that product, add to cart
@@ -125,6 +158,30 @@ public class Store {
      * and offers the option to check out.
      */
     public static void displayCart(ArrayList<Product> cart, Scanner scanner) {
+
+        double total = 0;
+
+        System.out.println("\nShopping Cart");
+
+        for (Product product : cart) {
+
+            System.out.printf("%s | %s | $%.2f%n",
+                    product.getProductId(),
+                    product.getProductName(),
+                    product.getPrice());
+
+            total += product.getPrice();
+        }
+
+        System.out.printf("Total: $%.2f%n", total);
+
+        System.out.println("C - Checkout");
+        System.out.println("X - Back");
+        String soundwaveScanner = scanner.nextLine();
+
+        if (soundwaveScanner.equalsIgnoreCase("C")) {
+            checkOut(cart, total, scanner);
+        }
         // TODO:
         //   • list each product in the cart
         //   • compute the total cost
@@ -142,6 +199,35 @@ public class Store {
     public static void checkOut(ArrayList<Product> cart,
                                 double totalAmount,
                                 Scanner scanner) {
+
+        System.out.printf("Total Due: $.2f%n", totalAmount);
+
+        System.out.print("Enter payment amount: $");
+
+        double payment = scanner.nextDouble();
+
+        if (payment < totalAmount) {
+            System.out.println("Insufficient payment.");
+            return;
+        }
+
+        double change = payment - totalAmount;
+
+        System.out.println("\n--------- Receipt ---------");
+
+        for (Product product : cart) {
+            System.out.printf("%s - $%.2f%n",
+                    product.getProductName(),
+                    product.getPrice());
+        }
+
+        System.out.printf("Total: $%.2f%n", totalAmount);
+        System.out.printf("Paid: $%.2f%n", payment);
+        System.out.printf("Change: $%.2f%n", change);
+
+        cart.clear();
+
+        System.out.println("Thank you for your purchase!");
         // TODO: implement steps listed above
     }
 
@@ -151,6 +237,11 @@ public class Store {
      * @return the matching Product, or null if not found
      */
     public static Product findProductById(String id, ArrayList<Product> inventory) {
+        for (Product product : inventory) {
+            if (product.getProductId().equalsIgnoreCase(id)){
+                return product;
+            }
+        }
         // TODO: loop over the list and compare ids
         return null;
     }
